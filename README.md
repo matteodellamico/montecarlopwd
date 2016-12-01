@@ -1,8 +1,8 @@
 # montecarlopwd
 
 Monte Carlo password checking, as described in the
-[http://www.eurecom.fr/~filippon/Publications/ccs15.pdf]
-(ACM CCS 2015 paper) by Matteo Dell'Amico and Maurizio Filippone.
+[ACM CCS 2015 paper](http://www.eurecom.fr/~filippon/Publications/ccs15.pdf)
+by Matteo Dell'Amico and Maurizio Filippone.
 
 ## Write me to get more info!
 
