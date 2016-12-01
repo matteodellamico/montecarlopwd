@@ -32,6 +32,6 @@ set, here's a test of "mypassword42"'s strength:
 $ echo mypassword42 | ./example.py /usr/share/john/password.lst  
 password,2-gram,3-gram,4-gram,5-gram,Backoff,PCFG
 mypassword42,7.24304921617e+15,4.47184963775e+49,1.11128546873e+13,2806031917.0,7.95632951796e+13,4.09424936607e+36
-'''
+```
 
 For anything more complex, just ask and I'll update the documentation!
