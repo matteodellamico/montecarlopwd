@@ -4,6 +4,14 @@ Monte Carlo password checking, as described in the
 [ACM CCS 2015 paper](http://www.eurecom.fr/~filippon/Publications/ccs15.pdf)
 by Matteo Dell'Amico and Maurizio Filippone.
 
+Copyright 2016 Symantec Corporation
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+[http://www.apache.org/licenses/LICENSE-2.0]
+
 ## Write me to get more info!
 
 Very limited documentation right now -- sorry!  If you want to use
