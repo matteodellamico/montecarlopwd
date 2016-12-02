@@ -148,7 +148,6 @@ class NGramModel(model.Model):
         word = []
         state = self.start
         logprob = 0
-        end = self.end
         for _ in range(maxlen):
             node = self.nodes[state]
             idx = bisect.bisect_left(node.cumprobs, random.random())
@@ -166,7 +165,6 @@ class NGramModel(model.Model):
             raise NotImplementedError
         state = self.start
         res = 0
-        nodes = self.nodes
         for c in word + self.end:
             node = self.nodes[state]
             try:
@@ -242,7 +240,6 @@ class TextGenerator(NGramModel):
         phrase = ''
         state = self.start
         logprob = 0
-        end = self.end
         for _ in range(maxlen):
             node = self.nodes[state]
             idx = bisect.bisect_left(node.cumprobs, random.random())

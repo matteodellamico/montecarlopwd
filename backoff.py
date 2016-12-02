@@ -8,12 +8,10 @@
 
 import bisect
 import collections
-import heapq
 import itertools
 import math
 import operator
 import os
-import pickle
 import random
 import shelve
 
@@ -122,10 +120,8 @@ class BackoffModel(ngram_chain.NGramModel):
                 transitions, probabilities = zip(*trans_probs)
                 transitions = ''.join(transitions)
                 probabilities = numpy.array(probabilities)
-                cumprobs = probabilities.cumsum()
                 # probabilities must sum to 1
-#                assert abs(cumprobs[-1] - 1) < 0.001
-                logprobs = -numpy.log2(probabilities)
+#                assert abs(probabilities.sum() - 1) < 0.001
 
                 nodes[state] = TmpNode(transitions, probabilities,
                                        probabilities.cumsum(),
@@ -150,9 +146,10 @@ class LazyBackoff(model.Model):
         self.threshold = threshold
         self.start = '\0' if start else ''
         self.end = '\0' if end else ''
-        self.shelves = shelves = {int(fname):
-                                  shelve.open(os.path.join(path, fname), 'r')
-                                  for fname in os.listdir(path)}
+        self.shelves = {
+            int(fname): shelve.open(os.path.join(path, fname), 'r')
+            for fname in os.listdir(path)
+        }
 
     def hasnode(self, state):
         shelves = self.shelves
@@ -172,7 +169,6 @@ class LazyBackoff(model.Model):
         return start, self.getnode(start)
 
     def update_state(self, state, transition):
-        shelves = self.shelves
         state += transition
         while not self.hasnode(state):
             state = state[1:]
