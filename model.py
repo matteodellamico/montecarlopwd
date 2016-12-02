@@ -14,8 +14,9 @@ import random
 
 import numpy as np
 
+
 class Model(metaclass=abc.ABCMeta):
-    
+
     @abc.abstractmethod
     def generate(self): pass
 
@@ -27,7 +28,7 @@ class Model(metaclass=abc.ABCMeta):
 
 
 class PosEstimator:
-    
+
     def __init__(self, sample, realsize=None):
         # realsize is a hack to make plot_restrictions work.
         # don't use unless you know what you're doing!
@@ -53,7 +54,7 @@ class PosEstimator:
         lp_threshold = self.logprob(2 ** entropy)
         for logprob, word in iter(model_generate, None):
             if (logprob <= lp_threshold and
-                lp_threshold < logprob - math.log2(random.random())):
+                    lp_threshold < logprob - math.log2(random.random())):
                 return logprob, word
 
     def sample(self, model_generate, entropy, n):

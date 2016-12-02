@@ -47,7 +47,7 @@ estimators = {name: model.PosEstimator(sample)
 modelnames = sorted(models)
 
 writer = csv.writer(sys.stdout)
-writer.writerow(['password'] + modelnames) 
+writer.writerow(['password'] + modelnames)
 
 for password in sys.stdin:
     password = password.strip('\r\n')

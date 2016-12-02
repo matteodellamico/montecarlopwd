@@ -24,6 +24,7 @@ TmpNode = collections.namedtuple('TmpNode',
                                  'transitions probabilities '
                                  'cumprobs logprobs')
 
+
 class BackoffModel(ngram_chain.NGramModel):
 
     def __init__(self, words, threshold, start_symbol=True,
@@ -187,9 +188,9 @@ class LazyBackoff(model.Model):
         res = 0
         state, node = self.begin()
         for c in word + self.end:
-            while True: # break when we should stop backing off
+            while True:  # break when we should stop backing off
                 count = node.get(c, 0) - leaveout
-                total = self.getcount(state) - leaveout 
+                total = self.getcount(state) - leaveout
                 if state == self.start == self.end:
                     total /= 2
                 if count >= self.threshold or state == '':
@@ -211,12 +212,12 @@ class LazyBackoff(model.Model):
         return res
 
     def generate(self, maxlen=100):
-        
+
         logprob = 0
         state, node = self.begin()
         word = ''
-        while True: # return when we find self.end
-            while True: # break when we should stop backing off
+        while True:  # return when we find self.end
+            while True:  # break when we should stop backing off
                 values = list(node.values())
                 cumsum = numpy.cumsum(values)
                 total = self.getcount(state)
@@ -231,7 +232,7 @@ class LazyBackoff(model.Model):
                 passing = sum(ct for ct in values if ct >= self.threshold)
                 logprob -= math.log2(1 - (passing / total))
             logprob -= math.log2(count / total)
-            c = next(itertools.islice(node.keys(), idx, None)) # n-th elem
+            c = next(itertools.islice(node.keys(), idx, None))  # n-th elem
             if c == self.end:
                 return logprob, word
             word += c

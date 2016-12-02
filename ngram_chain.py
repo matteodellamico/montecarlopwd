@@ -23,14 +23,17 @@ import model
 
 __default = object()
 
+
 def default_start(n):
     return '\0' * (n - 1)
+
 
 def ngrams(word, n, start=__default, end='\0'):
     if start is __default:
         start = default_start(n)
     word = start + word + end
     return [word[i:i + n] for i in range(len(word) - n + 1)]
+
 
 def ngrams_counter(words, n, start=__default, end='\0', with_counts=False):
     if start is __default:
@@ -44,6 +47,7 @@ def ngrams_counter(words, n, start=__default, end='\0', with_counts=False):
             res[word[i:i + n]] += count
     return res
 
+
 def parse_textfile(fname='/usr/share/dict/words'):
     try:
         with open(fname) as f:
@@ -51,6 +55,7 @@ def parse_textfile(fname='/usr/share/dict/words'):
     except FileNotFoundError:
         with bz2.open('{}.bz2'.format(fname)) as f:
             return [line.decode('latin9').strip() for line in f]
+
 
 def parse_rockyou(fname='datasets/rockyou-withcount.txt.bz2'):
     res = []
@@ -66,6 +71,7 @@ def parse_rockyou(fname='datasets/rockyou-withcount.txt.bz2'):
     return res
 
 Node = collections.namedtuple('Node', 'transitions cumprobs logprobs')
+
 
 class NGramModel(model.Model):
 
@@ -103,7 +109,7 @@ class NGramModel(model.Model):
                 cumprobs.append(cum_counts / total)
                 logprobs.append(-math.log2(count / total))
             nodes[state] = Node(''.join(transitions),
-                                np.array(cumprobs), 
+                                np.array(cumprobs),
                                 np.array(logprobs))
 
     def __del__(self):
@@ -119,7 +125,7 @@ class NGramModel(model.Model):
         startnode = nodes[self.start]
         # queue items: logprob, word, state, node, node_logprob, index
         queue = [(startnode.logprobs[0], '', self.start, startnode, 0, 0)]
-        
+
         while queue:
             logprob, word, state, node, node_lp, idx = heapq.heappop(queue)
             transition = node.transitions[idx]
@@ -159,9 +165,8 @@ class NGramModel(model.Model):
             word.append(transition)
         return logprob, ''.join(word)
 
-
     def logprob(self, word, leaveout=False):
-        if leaveout == True:
+        if leaveout:
             raise NotImplementedError
         state = self.start
         res = 0
@@ -233,7 +238,7 @@ class TextGenerator(NGramModel):
                 logprobs.append(-math.log2(count / total))
             transitions = [(t,) for t in transitions]
             nodes[state] = Node(transitions,
-                                np.array(cumprobs), 
+                                np.array(cumprobs),
                                 np.array(logprobs))
 
     def generate(self, maxlen=100):

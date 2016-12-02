@@ -17,11 +17,14 @@ import numpy
 
 import model
 
+
 def zerodict():
     return collections.defaultdict(itertools.repeat(0).__next__)
 
 L, D, S = range(3)
 pattern_re = re.compile(r'(?:([a-zA-Z]+)|([0-9]+)|[^a-zA-Z0-9]+)')
+
+
 def patterns(w):
     structure, groups = [], []
     for match in pattern_re.finditer(w):
@@ -32,10 +35,11 @@ def patterns(w):
         groups.append(group)
     return tuple(structure), groups
 
+
 class PCFG(model.Model):
 
     def __init__(self, training, dictionary=None, with_counts=False):
-        
+
         LDS = collections.defaultdict(zerodict)
         structures = zerodict()
 
@@ -65,7 +69,7 @@ class PCFG(model.Model):
         self.using_dictionary = dictionary is not None
 
     def generate_by_threshold(self, threshold):
-        
+
         LDS = self.LDS
         struct_counter, _, struct_cumcounts = self.structures
         tot_structures = struct_cumcounts[-1]
@@ -101,7 +105,7 @@ class PCFG(model.Model):
             idx = bisect.bisect_right(cum_counts, random.randrange(total))
             item = items[idx]
             return -math.log2(counter[item] / total), item
-        
+
         lp, structure = pick(self.structures)
         res = ''
         for pat_pair in structure:
@@ -125,12 +129,12 @@ class PCFG(model.Model):
         return lp, res
 
     def logprob(self, word, leaveout=False):
-    
+
         structure, groups = patterns(word)
         counter, _, cumsum = self.structures
         try:
-            res = -math.log2((counter[structure] - leaveout)
-                             / (cumsum[-1] - leaveout))
+            res = -math.log2((counter[structure] - leaveout) /
+                             (cumsum[-1] - leaveout))
         except (ZeroDivisionError, ValueError):
             return float('inf')
         assert res > 0
@@ -141,11 +145,11 @@ class PCFG(model.Model):
                 counter, _, cumsum = LDS[pat_pair]
             except KeyError:
                 return float('inf')
-            lo = leaveout and (not self.using_dictionary
-                               or pat_pair[0] != L)
+            lo = leaveout and (not self.using_dictionary or
+                               pat_pair[0] != L)
             try:
-                res -= math.log2((counter[group] - lo)
-                                 / (cumsum[-1] - lo))
+                res -= math.log2((counter[group] - lo) /
+                                 (cumsum[-1] - lo))
             except (ZeroDivisionError, ValueError):
                 return float('inf')
 
